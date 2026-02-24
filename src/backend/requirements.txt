@@ -1,0 +1,9 @@
+# Python dependencies for Quant Trading API
+fastapi
+uvicorn
+psycopg2-binary
+sqlalchemy
+pandas
+tushare
+python-dotenv
+pydantic
