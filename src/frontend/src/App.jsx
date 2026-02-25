@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import KLineChart from './components/KLineChart';
 import StockSelector from './components/StockSelector';
+import BacktestPage from './pages/Backtest';
 import stockApi from './api/stockApi';
 import './App.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState('kline'); // 'kline' or 'backtest'
   const [selectedStock, setSelectedStock] = useState('000001.SZ');
   const [stockData, setStockData] = useState(null);
   const [signals, setSignals] = useState([]);
@@ -55,70 +57,91 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>📈 量化交易可视化系统</h1>
+        <h1 className={activeTab === 'backtest' ? 'hidden' : ''}>📈 量化交易可视化系统</h1>
+        <h1 className={activeTab === 'backtest' ? '' : 'hidden'}>📊 回测系统</h1>
+        <div className="nav-tabs">
+          <button 
+            className={`tab ${activeTab === 'kline' ? 'active' : ''}`}
+            onClick={() => setActiveTab('kline')}
+          >
+            K线查看
+          </button>
+          <button 
+            className={`tab ${activeTab === 'backtest' ? 'active' : ''}`}
+            onClick={() => setActiveTab('backtest')}
+          >
+            回测系统
+          </button>
+        </div>
         <div className="stock-info">
-          {stockData && (
+          {stockData && activeTab === 'kline' && (
             <span className="stock-name">{stockData.name} - {selectedStock}</span>
           )}
         </div>
       </header>
 
       <main className="app-main">
-        <aside className="sidebar">
-          <StockSelector 
-            selected={selectedStock} 
-            onSelect={handleStockSelect} 
-          />
-        </aside>
+        {activeTab === 'kline' ? (
+          <>
+            <aside className="sidebar">
+              <StockSelector 
+                selected={selectedStock} 
+                onSelect={handleStockSelect} 
+              />
+            </aside>
 
-        <section className="chart-section">
-          {error && (
-            <div className="error-message">
-              {error}
-              <br />
-              <small>显示演示数据</small>
-            </div>
-          )}
+            <section className="chart-section">
+              {error && (
+                <div className="error-message">
+                  {error}
+                  <br />
+                  <small>显示演示数据</small>
+                </div>
+              )}
 
-          {loading ? (
-            <div className="loading-container">
-              <div className="loading">加载K线数据...</div>
-            </div>
-          ) : (
-            <KLineChart 
-              data={stockData} 
-              signals={signals}
-              indicators={indicators}
-            />
-          )}
+              {loading ? (
+                <div className="loading-container">
+                  <div className="loading">加载K线数据...</div>
+                </div>
+              ) : (
+                <KLineChart 
+                  data={stockData} 
+                  signals={signals}
+                  indicators={indicators}
+                />
+              )}
 
-          <div className="chart-legend">
-            <span className="legend-item">
-              <span className="legend-color" style={{ background: '#26a69a' }}></span>
-              买入信号
-            </span>
-            <span className="legend-item">
-              <span className="legend-color" style={{ background: '#ef5350' }}></span>
-              卖出信号
-            </span>
-            <span className="legend-item">
-              <span className="legend-color" style={{ background: '#fb8b24' }}></span>
-              MA5
-            </span>
-            <span className="legend-item">
-              <span className="legend-color" style={{ background: '#24a0fb' }}></span>
-              MA10
-            </span>
-            <span className="legend-item">
-              <span className="legend-color" style={{ background: '#f2a900' }}></span>
-              MA20
-            </span>
-            <span className="legend-item">
-              <span className="legend-color" style={{ background: '#9c27b0' }}></span>
-              MA60
-            </span>
-          </div>
-        </section>
+              <div className="chart-legend">
+                <span className="legend-item">
+                  <span className="legend-color" style={{ background: '#26a69a' }}></span>
+                  买入信号
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ background: '#ef5350' }}></span>
+                  卖出信号
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ background: '#fb8b24' }}></span>
+                  MA5
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ background: '#24a0fb' }}></span>
+                  MA10
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ background: '#f2a900' }}></span>
+                  MA20
+                </span>
+                <span className="legend-item">
+                  <span className="legend-color" style={{ background: '#9c27b0' }}></span>
+                  MA60
+                </span>
+              </div>
+            </section>
+          </>
+        ) : (
+          <BacktestPage />
+        )}
       </main>
     </div>
   );
