@@ -43,13 +43,19 @@ function KLineChart({ data, signals, indicators, onChartReady }) {
 
     // Add markers (signals)
     if (signals && signals.length > 0) {
-      const markers = signals.map((s) => ({
-        time: s.time,
-        position: s.position,
-        color: s.type === 'buy' ? '#26a69a' : '#ef5350',
-        shape: s.type === 'buy' ? 'arrowUp' : 'arrowDown',
-        text: s.type === 'buy' ? 'BUY' : 'SELL',
-      }));
+      const markers = signals.map((s) => {
+        // 转换日期格式: "2025-02-07" -> { year: 2025, month: 2, day: 7 }
+        const dateStr = s.time || s.trade_date;
+        const [year, month, day] = dateStr.split('-').map(Number);
+        
+        return {
+          time: { year, month, day },
+          position: s.position || (s.type === 'buy' ? 'belowBar' : 'aboveBar'),
+          color: s.type === 'buy' ? '#26a69a' : '#ef5350',
+          shape: s.type === 'buy' ? 'arrowUp' : 'arrowDown',
+          text: s.type === 'buy' ? 'BUY' : 'SELL',
+        };
+      });
       candleSeries.setMarkers(markers);
     }
 

@@ -17,11 +17,11 @@ class DataService:
     ) -> Dict[str, Any]:
         """Get candlestick data for a stock (from stock_daily or index_daily)"""
         
-        # Default: last 6 months
+        # Default: last 2 years
         if not end_date:
             end_date = datetime.now().strftime('%Y-%m-%d')
         if not start_date:
-            start_date = (datetime.now() - timedelta(days=180)).strftime('%Y-%m-%d')
+            start_date = (datetime.now() - timedelta(days=730)).strftime('%Y-%m-%d')
 
         # Try stock_daily first, then index_daily
         query = """
