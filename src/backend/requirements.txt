@@ -7,3 +7,4 @@ pandas
 tushare
 python-dotenv
 pydantic
+backtrader>=1.9.78

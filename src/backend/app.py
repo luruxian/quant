@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.stock import router as stock_router
 from api.factors_strategies import router as fs_router
+from api.backtest import router as backtest_router
 
 app = FastAPI(
     title="Quant Trading API",
@@ -24,6 +25,7 @@ app.add_middleware(
 # Include routers
 app.include_router(stock_router, prefix="/api", tags=["stock"])
 app.include_router(fs_router, prefix="/api", tags=["factors-strategies"])
+app.include_router(backtest_router, prefix="/api", tags=["backtest"])
 
 
 @app.get("/")
