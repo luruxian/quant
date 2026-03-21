@@ -5,13 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.stock import router as stock_router
 from api.factors_strategies import router as fs_router
-from api.backtest import router as backtest_router
-from api.yf import router as yf_router
 
-app = FastAPI(
-    title="Quant Trading API",
-    description="API for quant trading system with K-line visualization",
-    version="1.0.0"
+from api.yf import router as yf_router
 )
 
 # CORS middleware
